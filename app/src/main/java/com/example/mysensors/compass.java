@@ -2,11 +2,13 @@ package com.example.mysensors;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ public class compass extends AppCompatActivity implements SensorEventListener {
     private float[] mLastMagnetometer = new float[3];
     private boolean mLastAccelerometerSet = false;
     private boolean mLastMagnetometerSet = false;
+    Vibrator v;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,7 @@ public class compass extends AppCompatActivity implements SensorEventListener {
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         compass_img = (ImageView) findViewById(R.id.img_compass);
         txt_compass = (TextView) findViewById(R.id.txt_azimuth);
+        v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
         start();
     }
@@ -62,9 +66,11 @@ public class compass extends AppCompatActivity implements SensorEventListener {
 
         String where = "NW";
 
-        if (mAzimuth >= 350 || mAzimuth <= 10)
+        if (mAzimuth >= 345 || mAzimuth <= 15) {
             where = "N";
-        if (mAzimuth < 350 && mAzimuth > 280)
+            v.vibrate(500);
+        }
+        if (mAzimuth < 345 && mAzimuth > 280)
             where = "NW";
         if (mAzimuth <= 280 && mAzimuth > 260)
             where = "W";
@@ -76,7 +82,7 @@ public class compass extends AppCompatActivity implements SensorEventListener {
             where = "SE";
         if (mAzimuth <= 100 && mAzimuth > 80)
             where = "E";
-        if (mAzimuth <= 80 && mAzimuth > 10)
+        if (mAzimuth <= 80 && mAzimuth > 15)
             where = "NE";
 
 

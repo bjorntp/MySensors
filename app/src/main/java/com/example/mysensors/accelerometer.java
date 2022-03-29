@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class accelerometer extends AppCompatActivity implements SensorEventListener {
 
-    TextView xString, yString, zString;
+    TextView xString, yString, zString, lutning;
     private float xValue, yValue, zValue;
     private SensorManager sensorManager;
     private Sensor accSensor;
@@ -39,14 +39,15 @@ public class accelerometer extends AppCompatActivity implements SensorEventListe
         xString = (TextView) findViewById(R.id.xView);
         yString = (TextView) findViewById(R.id.yView);
         zString = (TextView) findViewById(R.id.zView);
+        lutning = (TextView) findViewById(R.id.alignment);
     }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        xValue = sensorEvent.values[0];
-        yValue = sensorEvent.values[1];
-        zValue = sensorEvent.values[2];
+        xValue = (float) Math.round(sensorEvent.values[0] * 100 ) / 100;
+        yValue = (float) Math.round(sensorEvent.values[1] * 100 ) / 100;
+        zValue = (float) Math.round(sensorEvent.values[2] * 100 ) / 100;
 
         displayCurrentValues();
     }
@@ -60,5 +61,13 @@ public class accelerometer extends AppCompatActivity implements SensorEventListe
         xString.setText("X: " + Float.toString(xValue));
         yString.setText("Y: " + Float.toString(yValue));
         zString.setText("Z: " + Float.toString(zValue));
+
+        if(xValue < 0.5 && xValue > -0.5) {
+            lutning.setText("Lutar ej åt sidan");
+        }else if (xValue > 0.5) {
+            lutning.setText("Lutar åt vänster");
+        } else {
+            lutning.setText("Lutar åt höger");
+        }
     }
 }
