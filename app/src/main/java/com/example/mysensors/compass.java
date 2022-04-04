@@ -1,5 +1,7 @@
 package com.example.mysensors;
 
+import static java.lang.Thread.*;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -22,11 +24,16 @@ public class compass extends AppCompatActivity implements SensorEventListener {
     boolean haveSensor = false, haveSensor2 = false;
     float[] rMat = new float[9];
     float[] orientation = new float[3];
+    long[] morseS = {0, 200, 300, 200, 300, 200};
+    long[] morseN = {0, 400, 300, 200};
+    long[] morseE = {0, 200};
+    long[] morseW = {0, 200, 300, 400, 300, 400};
     private float[] mLastAccelerometer = new float[3];
     private float[] mLastMagnetometer = new float[3];
     private boolean mLastAccelerometerSet = false;
     private boolean mLastMagnetometerSet = false;
     Vibrator v;
+    char senast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,20 +75,38 @@ public class compass extends AppCompatActivity implements SensorEventListener {
 
         if (mAzimuth >= 345 || mAzimuth <= 15) {
             where = "N";
-            v.vibrate(500);
+            if(senast != 'N') {
+                senast = 'N';
+                v.vibrate(morseN, -1);
+            }
         }
         if (mAzimuth < 345 && mAzimuth > 280)
             where = "NW";
-        if (mAzimuth <= 280 && mAzimuth > 260)
+        if (mAzimuth <= 280 && mAzimuth > 260) {
             where = "W";
+            if(senast != 'W') {
+                senast = 'W';
+                v.vibrate(morseW, -1);
+            }
+        }
         if (mAzimuth <= 260 && mAzimuth > 190)
             where = "SW";
-        if (mAzimuth <= 190 && mAzimuth > 170)
+        if (mAzimuth <= 190 && mAzimuth > 170) {
             where = "S";
+            if (senast != 'S') {
+                senast = 'S';
+                v.vibrate(morseS, -1);
+            }
+        }
         if (mAzimuth <= 170 && mAzimuth > 100)
             where = "SE";
-        if (mAzimuth <= 100 && mAzimuth > 80)
+        if (mAzimuth <= 100 && mAzimuth > 80) {
             where = "E";
+            if(senast != 'E') {
+                senast = 'E';
+                v.vibrate(morseE, -1);
+            }
+        }
         if (mAzimuth <= 80 && mAzimuth > 15)
             where = "NE";
 
@@ -129,5 +154,4 @@ public class compass extends AppCompatActivity implements SensorEventListener {
         super.onResume();
         start();
     }
-
 }
