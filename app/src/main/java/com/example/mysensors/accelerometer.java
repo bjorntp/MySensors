@@ -1,13 +1,16 @@
 package com.example.mysensors;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 public class accelerometer extends AppCompatActivity implements SensorEventListener {
@@ -16,12 +19,14 @@ public class accelerometer extends AppCompatActivity implements SensorEventListe
     private float xValue, yValue, zValue;
     private SensorManager sensorManager;
     private Sensor accSensor;
+    private View layout;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accelerometer);
+        layout = (View) findViewById(R.id.color);
 
         initialValues();
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -68,6 +73,12 @@ public class accelerometer extends AppCompatActivity implements SensorEventListe
             lutning.setText("Lutar åt vänster");
         } else {
             lutning.setText("Lutar åt höger");
+        }
+
+        if(xValue < 0.5 && xValue > -0.5 && yValue < 0.5 && yValue > -0.5) {
+            layout.setBackgroundResource(R.color.green);
+        } else {
+            layout.setBackgroundResource(R.color.red);
         }
     }
 }
